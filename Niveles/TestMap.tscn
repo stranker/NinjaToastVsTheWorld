@@ -105,10 +105,8 @@ transform/pos = Vector2( 75.6853, 400.114 )
 
 [node name="Gui" parent="." instance=ExtResource( 4 )]
 
-[node name="Baguete" parent="." groups=[
-"Enemy",
-] instance=ExtResource( 5 )]
+[node name="Baguete" parent="." instance=ExtResource( 5 )]
 
-transform/pos = Vector2( 376.835, 327.093 )
+transform/pos = Vector2( 366.284, 363.269 )
 
 

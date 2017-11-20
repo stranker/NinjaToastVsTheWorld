@@ -10,6 +10,7 @@ onready var VIDA = 0
 func _ready():
 	get_node("RayIzq").add_exception(self)
 	get_node("RayDer").add_exception(self)
+	add_to_group("Enemigo")
 	pass
 
 func movimientoLateral(delta):
@@ -17,10 +18,11 @@ func movimientoLateral(delta):
 	if !get_node("RayIzq").is_colliding():
 		velocity.x = VELOCIDAD
 		direction = 1
+		get_node("Sprite").set_flip_h(false)
 	elif !get_node("RayDer").is_colliding():
 		velocity.x = -VELOCIDAD
 		direction = -1
-	get_node("Sprite").set_scale(Vector2(direction,1))
+		get_node("Sprite").set_flip_h(true)
 	move_and_slide(velocity,Vector2(0,-1))
 	pass
 
