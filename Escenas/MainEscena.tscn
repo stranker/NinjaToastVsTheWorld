@@ -1,0 +1,103 @@
+[gd_scene load_steps=2 format=1]
+
+[sub_resource type="GDScript" id=1]
+
+resource/name = "MainEscena.gd"
+script/source = "extends Control
+
+func _ready():
+	var sizeWindow = OS.get_window_size()
+	get_node(\"C/Center\").edit_set_rect(Rect2(0,0,sizeWindow.x,sizeWindow.y))
+	pass
+"
+
+[node name="MainEscena" type="Control"]
+
+focus/ignore_mouse = false
+focus/stop_mouse = true
+size_flags/horizontal = 2
+size_flags/vertical = 2
+margin/left = 0.0
+margin/top = 0.0
+margin/right = 0.0
+margin/bottom = 0.0
+script/script = SubResource( 1 )
+
+[node name="C" type="Container" parent="."]
+
+anchor/right = 1
+anchor/bottom = 1
+focus/ignore_mouse = false
+focus/stop_mouse = true
+size_flags/horizontal = 3
+size_flags/vertical = 3
+margin/left = 0.0
+margin/top = 0.0
+margin/right = -1015.0
+margin/bottom = -587.0
+
+[node name="Center" type="CenterContainer" parent="C"]
+
+anchor/right = 1
+anchor/bottom = 1
+focus/ignore_mouse = false
+focus/stop_mouse = true
+size_flags/horizontal = 2
+size_flags/vertical = 2
+margin/left = -1.0
+margin/top = 0.0
+margin/right = 339.0
+margin/bottom = 123.0
+use_top_left = false
+
+[node name="VBoxContainer" type="VBoxContainer" parent="C/Center"]
+
+rect/min_size = Vector2( 200, 0 )
+focus/ignore_mouse = false
+focus/stop_mouse = false
+size_flags/horizontal = 2
+size_flags/vertical = 2
+margin/left = 238.0
+margin/top = 172.0
+margin/right = 438.0
+margin/bottom = 292.0
+custom_constants/separation = 20
+alignment = 0
+
+[node name="Play" type="Button" parent="C/Center/VBoxContainer"]
+
+rect/min_size = Vector2( 0, 60 )
+focus/ignore_mouse = false
+focus/stop_mouse = true
+size_flags/horizontal = 2
+size_flags/vertical = 2
+margin/left = 0.0
+margin/top = 0.0
+margin/right = 200.0
+margin/bottom = 60.0
+toggle_mode = true
+click_on_press = true
+enabled_focus_mode = 2
+shortcut = null
+text = "PLAY"
+flat = false
+
+[node name="Option" type="Button" parent="C/Center/VBoxContainer"]
+
+rect/min_size = Vector2( 0, 40 )
+focus/ignore_mouse = false
+focus/stop_mouse = true
+size_flags/horizontal = 2
+size_flags/vertical = 2
+margin/left = 0.0
+margin/top = 80.0
+margin/right = 200.0
+margin/bottom = 120.0
+toggle_mode = true
+click_on_press = true
+enabled_focus_mode = 2
+shortcut = null
+text = "OPTION"
+flat = false
+
+
