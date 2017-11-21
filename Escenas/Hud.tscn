@@ -5,7 +5,7 @@
 
 [sub_resource type="GDScript" id=1]
 
-resource/name = "Gui.gd"
+resource/name = "Hud.gd"
 script/source = "extends CanvasLayer
 
 
@@ -17,7 +17,8 @@ func _ready():
 	pass
 
 func _process(delta):
-	get_node(\"M/H/Vida/TextureFrame/Vida\").set_value(Global.vida)
+	if Global.player!=null:
+		get_node(\"M/H/Vida/TextureFrame/Vida\").set_value(Global.vida)
 	pass"
 
 [node name="Gui" type="CanvasLayer"]
