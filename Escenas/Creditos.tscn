@@ -1,0 +1,310 @@
+[gd_scene load_steps=6 format=1]
+
+[ext_resource path="res://Font/Last Ninja.fnt" type="BitmapFont" id=1]
+[ext_resource path="res://Objetos/Torre.png" type="Texture" id=2]
+
+[sub_resource type="GDScript" id=1]
+
+resource/name = "Creditos.gd"
+script/source = "extends Container
+
+func _ready():
+	var sizeWindow = OS.get_window_size()
+	edit_set_rect(Rect2(0,0,sizeWindow.width,sizeWindow.height))
+	get_node(\"Tween\").interpolate_property(get_node(\"CenterContainer\"), \"rect/pos\", Vector2(0,sizeWindow.height + 50) , Vector2(0, - 500) , 10, Tween.TRANS_LINEAR, Tween.EASE_IN)
+	get_node(\"Tween\").start()
+	VisualServer.set_default_clear_color(Color(0.9,0.80,98))
+	get_node(\"Volver\").set_global_pos(Vector2(sizeWindow.width/2-get_node(\"Volver\").get_item_rect().size.width/2,sizeWindow.height - 100))
+	pass
+
+
+func _on_Volver_pressed():
+	get_tree().change_scene(\"res://Escenas/MainEscena.tscn\")
+	pass # replace with function body
+
+
+func _on_Tween_tween_complete( object, key ):
+	if object == get_node(\"CenterContainer\"):
+		get_node(\"Sprite\").show()
+	pass # replace with function body
+"
+
+[sub_resource type="StyleBoxFlat" id=2]
+
+content_margin/left = -1.0
+content_margin/right = -1.0
+content_margin/top = -1.0
+content_margin/bottom = -1.0
+bg_color = Color( 0.898438, 0.692116, 0.14389, 1 )
+light_color = Color( 0.96875, 0.780487, 0.215698, 1 )
+dark_color = Color( 0.4375, 0.307617, 0, 1 )
+border_size = 3
+border_blend = false
+draw_bg = true
+
+[sub_resource type="StyleBoxFlat" id=3]
+
+content_margin/left = -1.0
+content_margin/right = -1.0
+content_margin/top = -1.0
+content_margin/bottom = -1.0
+bg_color = Color( 0.886719, 0.776853, 0.484924, 1 )
+light_color = Color( 0.96875, 0.780487, 0.215698, 1 )
+dark_color = Color( 0.4375, 0.307617, 0, 1 )
+border_size = 3
+border_blend = false
+draw_bg = true
+
+[node name="Creditos" type="Container"]
+
+focus/ignore_mouse = false
+focus/stop_mouse = true
+size_flags/horizontal = 2
+size_flags/vertical = 2
+margin/left = 0.0
+margin/top = 0.0
+margin/right = 1028.0
+margin/bottom = 616.0
+script/script = SubResource( 1 )
+
+[node name="CenterContainer" type="CenterContainer" parent="."]
+
+focus/ignore_mouse = false
+focus/stop_mouse = true
+size_flags/horizontal = 2
+size_flags/vertical = 2
+margin/left = 13.0
+margin/top = -6.0
+margin/right = 1025.0
+margin/bottom = 566.0
+use_top_left = false
+
+[node name="VBoxContainer" type="VBoxContainer" parent="CenterContainer"]
+
+focus/ignore_mouse = false
+focus/stop_mouse = false
+size_flags/horizontal = 2
+size_flags/vertical = 2
+margin/left = 394.0
+margin/top = 30.0
+margin/right = 617.0
+margin/bottom = 541.0
+alignment = 0
+
+[node name="GD" type="Label" parent="CenterContainer/VBoxContainer"]
+
+focus/ignore_mouse = true
+focus/stop_mouse = true
+size_flags/horizontal = 2
+size_flags/vertical = 0
+margin/left = 0.0
+margin/top = 0.0
+margin/right = 223.0
+margin/bottom = 43.0
+custom_fonts/font = ExtResource( 1 )
+custom_colors/font_color = Color( 0.278144, 0.0387573, 0.496094, 1 )
+text = "Game Designers
+"
+align = 1
+percent_visible = 1.0
+lines_skipped = 0
+max_lines_visible = -1
+
+[node name="Dana" type="Label" parent="CenterContainer/VBoxContainer"]
+
+focus/ignore_mouse = true
+focus/stop_mouse = true
+size_flags/horizontal = 2
+size_flags/vertical = 0
+margin/left = 0.0
+margin/top = 47.0
+margin/right = 223.0
+margin/bottom = 67.0
+custom_fonts/font = ExtResource( 1 )
+custom_colors/font_color = Color( 0.278144, 0.0387573, 0.496094, 1 )
+text = "Dana Billoud"
+align = 1
+percent_visible = 1.0
+lines_skipped = 0
+max_lines_visible = -1
+
+[node name="Paloma" type="Label" parent="CenterContainer/VBoxContainer"]
+
+focus/ignore_mouse = true
+focus/stop_mouse = true
+size_flags/horizontal = 2
+size_flags/vertical = 0
+margin/left = 0.0
+margin/top = 71.0
+margin/right = 223.0
+margin/bottom = 137.0
+custom_fonts/font = ExtResource( 1 )
+custom_colors/font_color = Color( 0.278144, 0.0387573, 0.496094, 1 )
+text = "Paloma Martinez
+
+"
+align = 1
+percent_visible = 1.0
+lines_skipped = 0
+max_lines_visible = -1
+
+[node name="A" type="Label" parent="CenterContainer/VBoxContainer"]
+
+focus/ignore_mouse = true
+focus/stop_mouse = true
+size_flags/horizontal = 2
+size_flags/vertical = 0
+margin/left = 0.0
+margin/top = 141.0
+margin/right = 223.0
+margin/bottom = 184.0
+custom_fonts/font = ExtResource( 1 )
+custom_colors/font_color = Color( 0.278144, 0.0387573, 0.496094, 1 )
+text = "Artistas
+"
+align = 1
+percent_visible = 1.0
+lines_skipped = 0
+max_lines_visible = -1
+
+[node name="Dana1" type="Label" parent="CenterContainer/VBoxContainer"]
+
+focus/ignore_mouse = true
+focus/stop_mouse = true
+size_flags/horizontal = 2
+size_flags/vertical = 0
+margin/left = 0.0
+margin/top = 188.0
+margin/right = 223.0
+margin/bottom = 208.0
+custom_fonts/font = ExtResource( 1 )
+custom_colors/font_color = Color( 0.278144, 0.0387573, 0.496094, 1 )
+text = "Dana Billoud"
+align = 1
+percent_visible = 1.0
+lines_skipped = 0
+max_lines_visible = -1
+
+[node name="Paloma1" type="Label" parent="CenterContainer/VBoxContainer"]
+
+focus/ignore_mouse = true
+focus/stop_mouse = true
+size_flags/horizontal = 2
+size_flags/vertical = 0
+margin/left = 0.0
+margin/top = 212.0
+margin/right = 223.0
+margin/bottom = 278.0
+custom_fonts/font = ExtResource( 1 )
+custom_colors/font_color = Color( 0.278144, 0.0387573, 0.496094, 1 )
+text = "Paloma Martinez
+
+"
+align = 1
+percent_visible = 1.0
+lines_skipped = 0
+max_lines_visible = -1
+
+[node name="P" type="Label" parent="CenterContainer/VBoxContainer"]
+
+focus/ignore_mouse = true
+focus/stop_mouse = true
+size_flags/horizontal = 2
+size_flags/vertical = 0
+margin/left = 0.0
+margin/top = 282.0
+margin/right = 223.0
+margin/bottom = 325.0
+custom_fonts/font = ExtResource( 1 )
+custom_colors/font_color = Color( 0.278144, 0.0387573, 0.496094, 1 )
+text = "Programadores
+"
+align = 1
+percent_visible = 1.0
+lines_skipped = 0
+max_lines_visible = -1
+
+[node name="Dani" type="Label" parent="CenterContainer/VBoxContainer"]
+
+focus/ignore_mouse = true
+focus/stop_mouse = true
+size_flags/horizontal = 2
+size_flags/vertical = 0
+margin/left = 0.0
+margin/top = 329.0
+margin/right = 223.0
+margin/bottom = 487.0
+custom_fonts/font = ExtResource( 1 )
+custom_colors/font_color = Color( 0.278144, 0.0387573, 0.496094, 1 )
+text = "Daniel Natarelli
+
+
+
+
+
+"
+align = 1
+percent_visible = 1.0
+lines_skipped = 0
+max_lines_visible = -1
+
+[node name="TC" type="Label" parent="CenterContainer/VBoxContainer"]
+
+focus/ignore_mouse = true
+focus/stop_mouse = true
+size_flags/horizontal = 2
+size_flags/vertical = 0
+margin/left = 0.0
+margin/top = 491.0
+margin/right = 223.0
+margin/bottom = 511.0
+custom_fonts/font = ExtResource( 1 )
+custom_colors/font_color = Color( 0.278144, 0.0387573, 0.496094, 1 )
+text = "TowerCode Games"
+align = 1
+percent_visible = 1.0
+lines_skipped = 0
+max_lines_visible = -1
+
+[node name="Tween" type="Tween" parent="."]
+
+playback/process_mode = 1
+playback/active = false
+playback/repeat = false
+playback/speed = 1.0
+
+[node name="Volver" type="Button" parent="."]
+
+rect/min_size = Vector2( 200, 40 )
+focus/ignore_mouse = false
+focus/stop_mouse = true
+size_flags/horizontal = 2
+size_flags/vertical = 2
+margin/left = 0.0
+margin/top = 0.0
+margin/right = 95.0
+margin/bottom = 26.0
+custom_styles/hover = SubResource( 2 )
+custom_styles/pressed = SubResource( 3 )
+custom_styles/normal = SubResource( 2 )
+custom_fonts/font = ExtResource( 1 )
+custom_colors/font_color_disabled = Color( 0, 0, 0, 1 )
+custom_colors/font_color = Color( 0, 0, 0, 1 )
+toggle_mode = false
+enabled_focus_mode = 2
+shortcut = null
+text = "Volver"
+flat = false
+
+[node name="Sprite" type="Sprite" parent="."]
+
+visibility/visible = false
+transform/pos = Vector2( 510.197, 288.362 )
+transform/scale = Vector2( 0.3, 0.3 )
+texture = ExtResource( 2 )
+
+[connection signal="tween_complete" from="Tween" to="." method="_on_Tween_tween_complete"]
+
+[connection signal="pressed" from="Volver" to="." method="_on_Volver_pressed"]
+
+

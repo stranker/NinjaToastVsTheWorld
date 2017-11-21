@@ -1,31 +1,9 @@
-[gd_scene load_steps=35 format=1]
+[gd_scene load_steps=12 format=1]
 
 [ext_resource path="res://Actores/NinjaToast.png" type="Texture" id=1]
 [ext_resource path="res://Escenas/GUI.tscn" type="PackedScene" id=2]
-[ext_resource path="res://Actores/Ninja/Idle/idle1.png" type="Texture" id=3]
-[ext_resource path="res://Actores/Ninja/Idle/idle2.png" type="Texture" id=4]
-[ext_resource path="res://Actores/Ninja/Idle/idle3.png" type="Texture" id=5]
-[ext_resource path="res://Actores/Ninja/Idle/idle4.png" type="Texture" id=6]
-[ext_resource path="res://Actores/Ninja/Idle/idle5.png" type="Texture" id=7]
-[ext_resource path="res://Actores/Ninja/Idle/idle6.png" type="Texture" id=8]
-[ext_resource path="res://Actores/Ninja/Run/run1.png" type="Texture" id=9]
-[ext_resource path="res://Actores/Ninja/Run/run3.png" type="Texture" id=10]
-[ext_resource path="res://Actores/Ninja/Run/run4.png" type="Texture" id=11]
-[ext_resource path="res://Actores/Ninja/Shuriken Attack/Sattack2.png" type="Texture" id=12]
-[ext_resource path="res://Actores/Ninja/Shuriken Attack/Sattack3.png" type="Texture" id=13]
-[ext_resource path="res://Actores/Ninja/Shuriken Attack/Sattack4.png" type="Texture" id=14]
-[ext_resource path="res://Actores/Ninja/Shuriken Attack/Sattack5.png" type="Texture" id=15]
-[ext_resource path="res://Actores/Ninja/Knife Attack/Kattack1.png" type="Texture" id=16]
-[ext_resource path="res://Actores/Ninja/Knife Attack/Kattack2.png" type="Texture" id=17]
-[ext_resource path="res://Actores/Ninja/Knife Attack/Kattack3.png" type="Texture" id=18]
-[ext_resource path="res://Actores/Ninja/Knife Attack/Kattack4.png" type="Texture" id=19]
-[ext_resource path="res://Actores/Ninja/Knife Attack/Kattack5.png" type="Texture" id=20]
-[ext_resource path="res://Actores/Ninja/Jump/jump4.png" type="Texture" id=21]
-[ext_resource path="res://Actores/Ninja/Jump/jump5.png" type="Texture" id=22]
-[ext_resource path="res://Actores/Ninja/Jump/jump2.png" type="Texture" id=23]
-[ext_resource path="res://Actores/Ninja/Jump/jump3.png" type="Texture" id=24]
 
-[sub_resource type="ConvexPolygonShape2D" id=11]
+[sub_resource type="ConvexPolygonShape2D" id=1]
 
 custom_solver_bias = 0.0
 points = Vector2Array( 0.945892, 31.5928, -26.0647, -28.7838, 26.3676, -29.181 )
@@ -52,6 +30,8 @@ var new_anim = \"\"
 var tiraShuriken = false
 var ataqueMelee = false
 var timerShuriken = 0
+var daniable = true
+var timerDaniable = 0
 
 func _ready():
 	set_fixed_process(true)
@@ -68,6 +48,13 @@ func _fixed_process(delta):
 	movimiento(delta)
 	maquinaEstados(delta)
 	setAnimation()
+	if !daniable:
+		timerDaniable += delta
+	if timerDaniable> 3:
+		daniable = true
+		timerDaniable = 0
+		get_node(\"Tween\").stop_all()
+		get_node(\"Sprite\").set_modulate(Color(1,1,1))
 	pass
 
 func setAnimation():
@@ -187,7 +174,11 @@ func ataqueMelee():
 	pass
 
 func getDamage(danio):
-	vida -= danio
+	if daniable:
+		daniable = false
+		vida -= danio
+		get_node(\"Tween\").interpolate_property(get_node(\"Sprite\"),\"modulate\",Color(1,1,1),Color(1,0,0),0.5,Tween.TRANS_LINEAR,Tween.EASE_IN_OUT)
+		get_node(\"Tween\").start()
 	pass"
 
 [sub_resource type="RectangleShape2D" id=3]
@@ -195,7 +186,7 @@ func getDamage(danio):
 custom_solver_bias = 0.0
 extents = Vector2( 23.5057, 42.0958 )
 
-[sub_resource type="Animation" id=8]
+[sub_resource type="Animation" id=4]
 
 resource/name = "Fall"
 length = 0.7
@@ -229,7 +220,7 @@ tracks/0/keys = {
 "values": [ Rect2( 0, 0, 80, 80 ), Rect2( 80, 0, 80, 80 ), Rect2( 160, 0, 80, 80 ), Rect2( 240, 0, 80, 80 ), Rect2( 320, 0, 80, 80 ), Rect2( 400, 0, 80, 80 ) ]
 }
 
-[sub_resource type="Animation" id=7]
+[sub_resource type="Animation" id=6]
 
 resource/name = "Jump"
 length = 0.2
@@ -246,7 +237,7 @@ tracks/0/keys = {
 "values": [ Rect2( 80, 160, 80, 80 ), Rect2( 160, 160, 80, 78 ) ]
 }
 
-[sub_resource type="Animation" id=10]
+[sub_resource type="Animation" id=7]
 
 resource/name = "Melee"
 length = 0.5
@@ -278,9 +269,8 @@ tracks/1/keys = {
 } ]
 }
 
-[sub_resource type="Animation" id=6]
+[sub_resource type="Animation" id=8]
 
-resource/name = "Run"
 length = 0.8
 loop = true
 step = 0.1
@@ -327,50 +317,16 @@ tracks/1/keys = {
 } ]
 }
 
-[sub_resource type="SpriteFrames" id=12]
-
-animations = [ {
-"frames": [ ExtResource( 3 ), ExtResource( 4 ), ExtResource( 5 ), ExtResource( 6 ), ExtResource( 7 ), ExtResource( 8 ) ],
-"loop": true,
-"name": "Idle",
-"speed": 5.0
-}, {
-"frames": [ ExtResource( 9 ), ExtResource( 10 ), ExtResource( 11 ) ],
-"loop": true,
-"name": "Run",
-"speed": 5.0
-}, {
-"frames": [ ExtResource( 12 ), ExtResource( 13 ), ExtResource( 14 ), ExtResource( 15 ) ],
-"loop": false,
-"name": "Shuriken",
-"speed": 5.0
-}, {
-"frames": [ ExtResource( 16 ), ExtResource( 17 ), ExtResource( 18 ), ExtResource( 19 ), ExtResource( 20 ) ],
-"loop": false,
-"name": "Melee",
-"speed": 5.0
-}, {
-"frames": [ ExtResource( 21 ), ExtResource( 22 ) ],
-"loop": false,
-"name": "Fall",
-"speed": 5.0
-}, {
-"frames": [ ExtResource( 23 ), ExtResource( 24 ) ],
-"loop": false,
-"name": "Jump",
-"speed": 5.0
-} ]
-
 [node name="NinjaToast" type="KinematicBody2D" groups=[
 "Player",
 ]]
 
 input/pickable = false
-shapes/0/shape = SubResource( 11 )
+shapes/0/shape = SubResource( 1 )
 shapes/0/transform = Matrix32( 1, 0, 0, 1, 0, 0 )
 shapes/0/trigger = false
 collision/layers = 2
-collision/mask = 5
+collision/mask = 13
 collision/margin = 0.08
 script/script = SubResource( 2 )
 
@@ -412,6 +368,7 @@ transform/pos = Vector2( 42.4589, 0 )
 
 [node name="Melee" type="Area2D" parent="."]
 
+editor/display_folded = true
 input/pickable = true
 shapes/0/shape = SubResource( 3 )
 shapes/0/transform = Matrix32( 1, 0, 0, 1, 50, 0 )
@@ -435,24 +392,16 @@ _update_shape_index = 0
 playback/process_mode = 1
 playback/default_blend_time = 0.0
 root/root = NodePath("..")
-anims/Fall = SubResource( 8 )
+anims/Fall = SubResource( 4 )
 anims/Idle = SubResource( 5 )
-anims/Jump = SubResource( 7 )
-anims/Melee = SubResource( 10 )
-anims/Run = SubResource( 6 )
+anims/Jump = SubResource( 6 )
+anims/Melee = SubResource( 7 )
+anims/Run = SubResource( 8 )
 anims/Shuriken = SubResource( 9 )
 playback/active = true
 playback/speed = 1.0
 blend_times = [  ]
 autoplay = "Idle"
-
-[node name="AnimatedSprite" type="AnimatedSprite" parent="."]
-
-visibility/visible = false
-frames = SubResource( 12 )
-animation = "Melee"
-frame = 4
-playing = true
 
 [node name="CollisionPolygon2D" type="CollisionPolygon2D" parent="."]
 
@@ -460,6 +409,13 @@ build_mode = 0
 polygon = Vector2Array( 0.945892, 31.5928, -26.0647, -28.7838, 26.3676, -29.181 )
 shape_range = Vector2( 0, 0 )
 trigger = false
+
+[node name="Tween" type="Tween" parent="."]
+
+playback/process_mode = 1
+playback/active = false
+playback/repeat = true
+playback/speed = 1.0
 
 [connection signal="body_enter" from="Melee" to="." method="_on_Melee_body_enter"]
 
