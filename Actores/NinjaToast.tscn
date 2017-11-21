@@ -97,14 +97,13 @@ func _on_Melee_body_enter( body ):
 		listaEnemigos.append(body)
 	pass # replace with function body
 
-
 func _on_Melee_body_exit( body ):
 	if body.is_in_group(\"Enemigo\"):
 		listaEnemigos.erase(body)
 	pass # replace with function body
 
 func getVida():
-	return vida
+	return 
 "
 
 [sub_resource type="RectangleShape2D" id=3]
@@ -180,6 +179,80 @@ transform/pos = Vector2( 50, 0 )
 shape = SubResource( 3 )
 trigger = false
 _update_shape_index = 0
+
+[node name="GUI" type="CanvasLayer" parent="."]
+
+layer = 1
+offset = Vector2( 0, 0 )
+rotation = 0.0
+scale = Vector2( 1, 1 )
+
+[node name="Izq" type="TouchScreenButton" parent="GUI"]
+
+transform/pos = Vector2( 34.4147, 569.473 )
+transform/rot = 90.0
+normal = ExtResource( 1 )
+pressed = null
+bitmask = null
+shape = null
+shape_centered = true
+shape_visible = true
+passby_press = false
+action = "ui_left"
+visibility_mode = 0
+
+[node name="Der" type="TouchScreenButton" parent="GUI"]
+
+transform/pos = Vector2( 198.004, 505.855 )
+transform/rot = 270.0
+normal = ExtResource( 1 )
+pressed = null
+bitmask = null
+shape = null
+shape_centered = true
+shape_visible = true
+passby_press = false
+action = "ui_right"
+visibility_mode = 0
+
+[node name="Salto" type="TouchScreenButton" parent="GUI"]
+
+transform/pos = Vector2( 700.133, 503.583 )
+normal = ExtResource( 1 )
+pressed = null
+bitmask = null
+shape = null
+shape_centered = true
+shape_visible = true
+passby_press = false
+action = "ui_up"
+visibility_mode = 0
+
+[node name="Shuriken" type="TouchScreenButton" parent="GUI"]
+
+transform/pos = Vector2( 816.009, 435.421 )
+normal = ExtResource( 1 )
+pressed = null
+bitmask = null
+shape = null
+shape_centered = true
+shape_visible = true
+passby_press = false
+action = "Shuriken"
+visibility_mode = 0
+
+[node name="Melee" type="TouchScreenButton" parent="GUI"]
+
+transform/pos = Vector2( 931.885, 505.855 )
+normal = ExtResource( 1 )
+pressed = null
+bitmask = null
+shape = null
+shape_centered = true
+shape_visible = true
+passby_press = false
+action = "Melee"
+visibility_mode = 0
 
 [connection signal="body_enter" from="Melee" to="." method="_on_Melee_body_enter"]
 

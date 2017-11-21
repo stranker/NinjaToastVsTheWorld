@@ -17,6 +17,8 @@ func _ready():
 	setVida(3)
 	setVelocidad(200)
 	set_fixed_process(true)
+	get_node(\"RayIzq\").add_exception(self)
+	get_node(\"RayDer\").add_exception(self)
 	pass
 
 func _fixed_process(delta):

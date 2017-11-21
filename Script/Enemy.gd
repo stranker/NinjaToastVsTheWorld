@@ -8,8 +8,6 @@ onready var SALTO = 0
 onready var VIDA = 0
 
 func _ready():
-	get_node("RayIzq").add_exception(self)
-	get_node("RayDer").add_exception(self)
 	add_to_group("Enemigo")
 	pass
 
