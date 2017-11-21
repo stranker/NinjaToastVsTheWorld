@@ -1,6 +1,6 @@
 [gd_scene load_steps=4 format=1]
 
-[ext_resource path="res://icon.png" type="Texture" id=1]
+[ext_resource path="res://Escenas/Frame.png" type="Texture" id=1]
 [ext_resource path="res://Font/Last Ninja.fnt" type="BitmapFont" id=2]
 
 [sub_resource type="GDScript" id=1]
@@ -17,8 +17,9 @@ func _ready():
 	pass
 
 func _process(delta):
-	if Global.player!=null:
-		get_node(\"M/H/Vida/TextureFrame/Vida\").set_value(Global.vida)
+	if Global.player != null:
+		get_node(\"M/H/Vida/TextureFrame/Vida\").set_val(Global.vida)
+		get_node(\"M/H/Puntaje/Score\").set_text(str(Global.score))
 	pass"
 
 [node name="Gui" type="CanvasLayer"]
@@ -54,7 +55,7 @@ margin/left = 10.0
 margin/top = 10.0
 margin/right = 916.0
 margin/bottom = 381.0
-custom_constants/separation = 30
+custom_constants/separation = 0
 alignment = 0
 
 [node name="Vida" type="VBoxContainer" parent="M/H"]
@@ -66,27 +67,28 @@ size_flags/horizontal = 2
 size_flags/vertical = 2
 margin/left = 0.0
 margin/top = 0.0
-margin/right = 300.0
+margin/right = 400.0
 margin/bottom = 371.0
 alignment = 0
 
 [node name="TextureFrame" type="TextureFrame" parent="M/H/Vida"]
 
+rect/min_size = Vector2( 400, 70 )
 focus/ignore_mouse = true
 focus/stop_mouse = true
 size_flags/horizontal = 2
 size_flags/vertical = 2
 margin/left = 0.0
 margin/top = 0.0
-margin/right = 300.0
-margin/bottom = 64.0
+margin/right = 400.0
+margin/bottom = 70.0
 texture = ExtResource( 1 )
-stretch_mode = 0
+stretch_mode = 5
 
 [node name="Vida" type="ProgressBar" parent="M/H/Vida/TextureFrame"]
 
 visibility/behind_parent = true
-rect/min_size = Vector2( 200, 30 )
+rect/min_size = Vector2( 300, 30 )
 focus/ignore_mouse = false
 focus/stop_mouse = true
 size_flags/horizontal = 2
@@ -110,25 +112,45 @@ focus/ignore_mouse = false
 focus/stop_mouse = false
 size_flags/horizontal = 2
 size_flags/vertical = 2
-margin/left = 330.0
+margin/left = 400.0
 margin/top = 0.0
-margin/right = 730.0
+margin/right = 700.0
 margin/bottom = 371.0
 alignment = 0
 
 [node name="Puntaje" type="Label" parent="M/H/Puntaje"]
 
-rect/min_size = Vector2( 400, 0 )
+rect/min_size = Vector2( 300, 0 )
 focus/ignore_mouse = true
 focus/stop_mouse = true
 size_flags/horizontal = 2
 size_flags/vertical = 0
 margin/left = 0.0
 margin/top = 0.0
-margin/right = 400.0
+margin/right = 300.0
 margin/bottom = 18.0
 custom_fonts/font = ExtResource( 2 )
+custom_colors/font_color = Color( 0, 0, 0, 1 )
 text = "PUNTAJE"
+align = 1
+percent_visible = 1.0
+lines_skipped = 0
+max_lines_visible = -1
+
+[node name="Score" type="Label" parent="M/H/Puntaje"]
+
+rect/min_size = Vector2( 300, 0 )
+focus/ignore_mouse = true
+focus/stop_mouse = true
+size_flags/horizontal = 2
+size_flags/vertical = 0
+margin/left = 0.0
+margin/top = 22.0
+margin/right = 300.0
+margin/bottom = 40.0
+custom_fonts/font = ExtResource( 2 )
+custom_colors/font_color = Color( 0, 0, 0, 1 )
+text = "Score"
 align = 1
 percent_visible = 1.0
 lines_skipped = 0

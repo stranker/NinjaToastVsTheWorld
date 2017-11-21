@@ -1,11 +1,34 @@
-[gd_scene load_steps=5 format=1]
+[gd_scene load_steps=35 format=1]
 
-[ext_resource path="res://icon.png" type="Texture" id=1]
+[ext_resource path="res://Actores/NinjaToast.png" type="Texture" id=1]
+[ext_resource path="res://Escenas/GUI.tscn" type="PackedScene" id=2]
+[ext_resource path="res://Actores/Ninja/Idle/idle1.png" type="Texture" id=3]
+[ext_resource path="res://Actores/Ninja/Idle/idle2.png" type="Texture" id=4]
+[ext_resource path="res://Actores/Ninja/Idle/idle3.png" type="Texture" id=5]
+[ext_resource path="res://Actores/Ninja/Idle/idle4.png" type="Texture" id=6]
+[ext_resource path="res://Actores/Ninja/Idle/idle5.png" type="Texture" id=7]
+[ext_resource path="res://Actores/Ninja/Idle/idle6.png" type="Texture" id=8]
+[ext_resource path="res://Actores/Ninja/Run/run1.png" type="Texture" id=9]
+[ext_resource path="res://Actores/Ninja/Run/run3.png" type="Texture" id=10]
+[ext_resource path="res://Actores/Ninja/Run/run4.png" type="Texture" id=11]
+[ext_resource path="res://Actores/Ninja/Shuriken Attack/Sattack2.png" type="Texture" id=12]
+[ext_resource path="res://Actores/Ninja/Shuriken Attack/Sattack3.png" type="Texture" id=13]
+[ext_resource path="res://Actores/Ninja/Shuriken Attack/Sattack4.png" type="Texture" id=14]
+[ext_resource path="res://Actores/Ninja/Shuriken Attack/Sattack5.png" type="Texture" id=15]
+[ext_resource path="res://Actores/Ninja/Knife Attack/Kattack1.png" type="Texture" id=16]
+[ext_resource path="res://Actores/Ninja/Knife Attack/Kattack2.png" type="Texture" id=17]
+[ext_resource path="res://Actores/Ninja/Knife Attack/Kattack3.png" type="Texture" id=18]
+[ext_resource path="res://Actores/Ninja/Knife Attack/Kattack4.png" type="Texture" id=19]
+[ext_resource path="res://Actores/Ninja/Knife Attack/Kattack5.png" type="Texture" id=20]
+[ext_resource path="res://Actores/Ninja/Jump/jump4.png" type="Texture" id=21]
+[ext_resource path="res://Actores/Ninja/Jump/jump5.png" type="Texture" id=22]
+[ext_resource path="res://Actores/Ninja/Jump/jump2.png" type="Texture" id=23]
+[ext_resource path="res://Actores/Ninja/Jump/jump3.png" type="Texture" id=24]
 
-[sub_resource type="CircleShape2D" id=1]
+[sub_resource type="ConvexPolygonShape2D" id=11]
 
 custom_solver_bias = 0.0
-radius = 31.7566
+points = Vector2Array( 0.945892, 31.5928, -26.0647, -28.7838, 26.3676, -29.181 )
 
 [sub_resource type="GDScript" id=2]
 
@@ -20,9 +43,15 @@ const SALTO = 600
 var direction = 1
 var shuriken = preload(\"res://Objetos/Shuriken.tscn\")
 var listaEnemigos = []
-enum STATE {IDLE,RUN,FALLING,JUMP}
+enum STATE {IDLE,RUN,FALLING,JUMP,SHURIKEN,MELEE}
 var estado = STATE.IDLE
+var timeGrace = 0
+var puedeSaltar = true
 var vida
+var new_anim = \"\"
+var tiraShuriken = false
+var ataqueMelee = false
+var timerShuriken = 0
 
 func _ready():
 	set_fixed_process(true)
@@ -37,21 +66,56 @@ func is_on_floor():
 
 func _fixed_process(delta):
 	movimiento(delta)
-	maquinaEstados()
-	#print(estado)
+	maquinaEstados(delta)
+	setAnimation()
 	pass
 
-func maquinaEstados():
-	if(is_on_floor()):
-		if(velocity.x!=0):
-			estado = STATE.RUN
-		else:
-			estado = STATE.IDLE
+func setAnimation():
+	var curr_anim = get_node(\"AnimationPlayer\").get_current_animation()
+	if new_anim != curr_anim:
+		get_node(\"AnimationPlayer\").play(new_anim)
+	pass
+
+func maquinaEstados(delta):
+	destrabarShuriken(delta)
+	var anim = get_node(\"AnimationPlayer\")
+	if tiraShuriken || ataqueMelee:
+		if tiraShuriken:
+			estado = STATE.SHURIKEN
+			new_anim = \"Shuriken\"
+		elif ataqueMelee:
+			estado = STATE.MELEE
+			new_anim = \"Melee\"
 	else:
-		if(velocity.y > 0):
-			estado = STATE.FALLING
-		if(velocity.y < 0):
-			estado = STATE.JUMP
+		if(is_on_floor()):
+			ataqueMelee = false
+			puedeSaltar = true
+			if(velocity.x!=0):
+				estado = STATE.RUN
+				new_anim = \"Run\"
+			else:
+				estado = STATE.IDLE
+				new_anim = \"Idle\"
+			timeGrace = 0
+		else:
+			if(velocity.y > 0):
+				timeGrace += delta
+				estado = STATE.FALLING
+				new_anim = \"Fall\"
+			if(velocity.y < 0):
+				timeGrace = 0
+				puedeSaltar = false
+				estado = STATE.JUMP
+				new_anim = \"Jump\"
+	pass
+
+func destrabarShuriken(delta):
+	if estado == STATE.SHURIKEN:
+		timerShuriken += delta
+	if timerShuriken > 1:
+		estado = STATE.IDLE
+		tiraShuriken = false
+		timerShuriken = 0
 	pass
 
 func movimiento(delta):
@@ -73,23 +137,26 @@ func movimiento(delta):
 		direction = 1
 	else:
 		velocity.x = 0
-	move_and_slide(velocity,Vector2(0,-1))
+	move_and_slide(velocity,Vector2(0,-1),5,3)
 	set_scale(Vector2(direction,1))
 	pass
 
+func puedeSaltar():
+	return timeGrace<0.12 and puedeSaltar
+
 func _input(event):
-	if event.is_action(\"ui_up\") and event.is_pressed() and !event.is_echo() and is_on_floor():
+	if event.is_action(\"ui_up\") and event.is_pressed() and !event.is_echo() and (is_on_floor() or puedeSaltar()):
 		velocity.y = -SALTO
-	if event.is_action(\"Shuriken\") and event.is_pressed() and !event.is_echo():
-		var s = shuriken.instance()
-		s.direction = direction
-		get_tree().get_root().add_child(s)
-		s.set_global_pos(get_node(\"Position2D\").get_global_pos())
-	if event.is_action(\"Melee\") and event.is_pressed() and !event.is_echo():
+		puedeSaltar = false
+	if event.is_action(\"Shuriken\") and event.is_pressed() and !event.is_echo() and !tiraShuriken:
+		tiraShuriken = true
+	if event.is_action(\"Melee\") and event.is_pressed() and !event.is_echo() and !ataqueMelee:
 		translate(Vector2(direction*5,0))
+		ataqueMelee = true
 		if !listaEnemigos.empty():
 			for i in listaEnemigos:
 				i.getDamage()
+		
 	pass
 
 func _on_Melee_body_enter( body ):
@@ -103,18 +170,203 @@ func _on_Melee_body_exit( body ):
 	pass # replace with function body
 
 func getVida():
-	return 
-"
+	return vida
+	
+func spawnShuriken():
+	var s = shuriken.instance()
+	s.direction = direction
+	get_tree().get_root().add_child(s)
+	s.set_global_pos(get_node(\"Position2D\").get_global_pos())
+	pass
+
+func ataqueShuriken():
+	tiraShuriken = false
+
+func ataqueMelee():
+	ataqueMelee = false
+	pass
+
+func getDamage(danio):
+	vida -= danio
+	pass"
 
 [sub_resource type="RectangleShape2D" id=3]
 
 custom_solver_bias = 0.0
 extents = Vector2( 23.5057, 42.0958 )
 
-[node name="NinjaToast" type="KinematicBody2D"]
+[sub_resource type="Animation" id=8]
+
+resource/name = "Fall"
+length = 0.7
+loop = false
+step = 0.1
+tracks/0/type = "value"
+tracks/0/path = NodePath("Sprite:region_rect")
+tracks/0/interp = 1
+tracks/0/imported = false
+tracks/0/keys = {
+"times": FloatArray( 0, 0.7 ),
+"transitions": FloatArray( 1, 1 ),
+"update": 1,
+"values": [ Rect2( 240, 160, 80, 80 ), Rect2( 320, 160, 80, 80 ) ]
+}
+
+[sub_resource type="Animation" id=5]
+
+resource/name = "Idle"
+length = 1.0
+loop = true
+step = 0.1
+tracks/0/type = "value"
+tracks/0/path = NodePath("Sprite:region_rect")
+tracks/0/interp = 1
+tracks/0/imported = false
+tracks/0/keys = {
+"times": FloatArray( 0, 0.2, 0.4, 0.6, 0.8, 1 ),
+"transitions": FloatArray( 1, 1, 1, 1, 1, 1 ),
+"update": 1,
+"values": [ Rect2( 0, 0, 80, 80 ), Rect2( 80, 0, 80, 80 ), Rect2( 160, 0, 80, 80 ), Rect2( 240, 0, 80, 80 ), Rect2( 320, 0, 80, 80 ), Rect2( 400, 0, 80, 80 ) ]
+}
+
+[sub_resource type="Animation" id=7]
+
+resource/name = "Jump"
+length = 0.2
+loop = false
+step = 0.1
+tracks/0/type = "value"
+tracks/0/path = NodePath("Sprite:region_rect")
+tracks/0/interp = 1
+tracks/0/imported = false
+tracks/0/keys = {
+"times": FloatArray( 0, 0.1 ),
+"transitions": FloatArray( 1, 1 ),
+"update": 1,
+"values": [ Rect2( 80, 160, 80, 80 ), Rect2( 160, 160, 80, 78 ) ]
+}
+
+[sub_resource type="Animation" id=10]
+
+resource/name = "Melee"
+length = 0.5
+loop = false
+step = 0.1
+tracks/0/type = "value"
+tracks/0/path = NodePath("Sprite:region_rect")
+tracks/0/interp = 1
+tracks/0/imported = false
+tracks/0/keys = {
+"times": FloatArray( 0, 0.1, 0.2, 0.3, 0.4 ),
+"transitions": FloatArray( 1, 1, 1, 1, 1 ),
+"update": 1,
+"values": [ Rect2( 0, 240, 80, 80 ), Rect2( 80, 240, 80, 80 ), Rect2( 160, 240, 80, 80 ), Rect2( 240, 240, 80, 80 ), Rect2( 320, 240, 80, 80 ) ]
+}
+tracks/1/type = "method"
+tracks/1/path = NodePath(".")
+tracks/1/interp = 1
+tracks/1/imported = false
+tracks/1/keys = {
+"times": FloatArray( 0.4, 0.5 ),
+"transitions": FloatArray( 1, 1 ),
+"values": [ {
+"args": [  ],
+"method": "ataqueMelee"
+}, {
+"args": [  ],
+"method": "ataqueMelee"
+} ]
+}
+
+[sub_resource type="Animation" id=6]
+
+resource/name = "Run"
+length = 0.8
+loop = true
+step = 0.1
+tracks/0/type = "value"
+tracks/0/path = NodePath("Sprite:region_rect")
+tracks/0/interp = 1
+tracks/0/imported = false
+tracks/0/keys = {
+"times": FloatArray( 0, 0.2, 0.4, 0.6, 0.8 ),
+"transitions": FloatArray( 1, 1, 1, 1, 1 ),
+"update": 1,
+"values": [ Rect2( 0, 80, 80, 80 ), Rect2( 160, 80, 80, 80 ), Rect2( 240, 80, 80, 80 ), Rect2( 160, 80, 80, 80 ), Rect2( 0, 80, 80, 80 ) ]
+}
+
+[sub_resource type="Animation" id=9]
+
+resource/name = "Shuriken"
+length = 0.5
+loop = false
+step = 0.1
+tracks/0/type = "value"
+tracks/0/path = NodePath("Sprite:region_rect")
+tracks/0/interp = 1
+tracks/0/imported = false
+tracks/0/keys = {
+"times": FloatArray( 0, 0.1, 0.2, 0.3 ),
+"transitions": FloatArray( 1, 1, 1, 1 ),
+"update": 1,
+"values": [ Rect2( 80, 320, 80, 80 ), Rect2( 160, 320, 80, 80 ), Rect2( 240, 320, 80, 80 ), Rect2( 320, 320, 80, 80 ) ]
+}
+tracks/1/type = "method"
+tracks/1/path = NodePath(".")
+tracks/1/interp = 1
+tracks/1/imported = false
+tracks/1/keys = {
+"times": FloatArray( 0.3, 0.5 ),
+"transitions": FloatArray( 1, 1 ),
+"values": [ {
+"args": [  ],
+"method": "spawnShuriken"
+}, {
+"args": [  ],
+"method": "ataqueShuriken"
+} ]
+}
+
+[sub_resource type="SpriteFrames" id=12]
+
+animations = [ {
+"frames": [ ExtResource( 3 ), ExtResource( 4 ), ExtResource( 5 ), ExtResource( 6 ), ExtResource( 7 ), ExtResource( 8 ) ],
+"loop": true,
+"name": "Idle",
+"speed": 5.0
+}, {
+"frames": [ ExtResource( 9 ), ExtResource( 10 ), ExtResource( 11 ) ],
+"loop": true,
+"name": "Run",
+"speed": 5.0
+}, {
+"frames": [ ExtResource( 12 ), ExtResource( 13 ), ExtResource( 14 ), ExtResource( 15 ) ],
+"loop": false,
+"name": "Shuriken",
+"speed": 5.0
+}, {
+"frames": [ ExtResource( 16 ), ExtResource( 17 ), ExtResource( 18 ), ExtResource( 19 ), ExtResource( 20 ) ],
+"loop": false,
+"name": "Melee",
+"speed": 5.0
+}, {
+"frames": [ ExtResource( 21 ), ExtResource( 22 ) ],
+"loop": false,
+"name": "Fall",
+"speed": 5.0
+}, {
+"frames": [ ExtResource( 23 ), ExtResource( 24 ) ],
+"loop": false,
+"name": "Jump",
+"speed": 5.0
+} ]
+
+[node name="NinjaToast" type="KinematicBody2D" groups=[
+"Player",
+]]
 
 input/pickable = false
-shapes/0/shape = SubResource( 1 )
+shapes/0/shape = SubResource( 11 )
 shapes/0/transform = Matrix32( 1, 0, 0, 1, 0, 0 )
 shapes/0/trigger = false
 collision/layers = 2
@@ -125,12 +377,8 @@ script/script = SubResource( 2 )
 [node name="Sprite" type="Sprite" parent="."]
 
 texture = ExtResource( 1 )
-
-[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
-
-shape = SubResource( 1 )
-trigger = false
-_update_shape_index = 0
+region = true
+region_rect = Rect2( 320, 320, 80, 80 )
 
 [node name="RayPiso" type="RayCast2D" parent="."]
 
@@ -180,79 +428,38 @@ shape = SubResource( 3 )
 trigger = false
 _update_shape_index = 0
 
-[node name="GUI" type="CanvasLayer" parent="."]
+[node name="GUI" parent="." instance=ExtResource( 2 )]
 
-layer = 1
-offset = Vector2( 0, 0 )
-rotation = 0.0
-scale = Vector2( 1, 1 )
+[node name="AnimationPlayer" type="AnimationPlayer" parent="."]
 
-[node name="Izq" type="TouchScreenButton" parent="GUI"]
+playback/process_mode = 1
+playback/default_blend_time = 0.0
+root/root = NodePath("..")
+anims/Fall = SubResource( 8 )
+anims/Idle = SubResource( 5 )
+anims/Jump = SubResource( 7 )
+anims/Melee = SubResource( 10 )
+anims/Run = SubResource( 6 )
+anims/Shuriken = SubResource( 9 )
+playback/active = true
+playback/speed = 1.0
+blend_times = [  ]
+autoplay = "Idle"
 
-transform/pos = Vector2( 34.4147, 569.473 )
-transform/rot = 90.0
-normal = ExtResource( 1 )
-pressed = null
-bitmask = null
-shape = null
-shape_centered = true
-shape_visible = true
-passby_press = false
-action = "ui_left"
-visibility_mode = 0
+[node name="AnimatedSprite" type="AnimatedSprite" parent="."]
 
-[node name="Der" type="TouchScreenButton" parent="GUI"]
+visibility/visible = false
+frames = SubResource( 12 )
+animation = "Melee"
+frame = 4
+playing = true
 
-transform/pos = Vector2( 198.004, 505.855 )
-transform/rot = 270.0
-normal = ExtResource( 1 )
-pressed = null
-bitmask = null
-shape = null
-shape_centered = true
-shape_visible = true
-passby_press = false
-action = "ui_right"
-visibility_mode = 0
+[node name="CollisionPolygon2D" type="CollisionPolygon2D" parent="."]
 
-[node name="Salto" type="TouchScreenButton" parent="GUI"]
-
-transform/pos = Vector2( 700.133, 503.583 )
-normal = ExtResource( 1 )
-pressed = null
-bitmask = null
-shape = null
-shape_centered = true
-shape_visible = true
-passby_press = false
-action = "ui_up"
-visibility_mode = 0
-
-[node name="Shuriken" type="TouchScreenButton" parent="GUI"]
-
-transform/pos = Vector2( 816.009, 435.421 )
-normal = ExtResource( 1 )
-pressed = null
-bitmask = null
-shape = null
-shape_centered = true
-shape_visible = true
-passby_press = false
-action = "Shuriken"
-visibility_mode = 0
-
-[node name="Melee" type="TouchScreenButton" parent="GUI"]
-
-transform/pos = Vector2( 931.885, 505.855 )
-normal = ExtResource( 1 )
-pressed = null
-bitmask = null
-shape = null
-shape_centered = true
-shape_visible = true
-passby_press = false
-action = "Melee"
-visibility_mode = 0
+build_mode = 0
+polygon = Vector2Array( 0.945892, 31.5928, -26.0647, -28.7838, 26.3676, -29.181 )
+shape_range = Vector2( 0, 0 )
+trigger = false
 
 [connection signal="body_enter" from="Melee" to="." method="_on_Melee_body_enter"]
 

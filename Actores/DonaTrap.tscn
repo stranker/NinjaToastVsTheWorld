@@ -1,0 +1,121 @@
+[gd_scene load_steps=7 format=1]
+
+[ext_resource path="res://Actores/DonaTrap/donut1.png" type="Texture" id=1]
+[ext_resource path="res://Actores/DonaTrap/donut2.png" type="Texture" id=2]
+
+[sub_resource type="CapsuleShape2D" id=3]
+
+custom_solver_bias = 0.0
+radius = 54.1596
+height = 20.0
+
+[sub_resource type="GDScript" id=2]
+
+resource/name = "DonaTrap.gd"
+script/source = "extends \"res://Script/Enemy.gd\"
+
+var timerJump = 0
+
+func _ready():
+	setVida(5)
+	setSalto(400)
+	setScore(300)
+	get_node(\"RayPiso\").add_exception(self)
+	set_fixed_process(true)
+	pass
+
+func _fixed_process(delta):
+	velocity.y += GRAVEDAD * delta
+	velocity.y = clamp(velocity.y,-SALTO, GRAVEDAD/2)
+	if(get_node(\"RayPiso\").is_colliding()):
+		timerJump += delta
+		get_node(\"Sprite\").play(\"Idle\")
+	if(timerJump > rand_range(3,4)):
+		velocity.y = -getSalto()
+		get_node(\"Sprite\").play(\"Jump\")
+		timerJump = 0
+		velocity.x = rand_range(-200,200)
+		
+		if(velocity.x<0):
+			get_node(\"Sprite\").set_flip_h(true)
+		else:
+			get_node(\"Sprite\").set_flip_h(false)
+	move(velocity * delta)
+	pass
+
+func _on_Damage_body_enter( body ):
+	if body.is_in_group(\"Player\"):
+		body.getDamage(3)
+	pass # replace with function body
+"
+
+[sub_resource type="SpriteFrames" id=4]
+
+animations = [ {
+"frames": [ ExtResource( 1 ) ],
+"loop": true,
+"name": "Idle",
+"speed": 5.0
+}, {
+"frames": [ ExtResource( 2 ) ],
+"loop": false,
+"name": "Jump",
+"speed": 5.0
+} ]
+
+[sub_resource type="CircleShape2D" id=5]
+
+custom_solver_bias = 0.0
+radius = 68.7555
+
+[node name="DonaTrap" type="KinematicBody2D"]
+
+input/pickable = false
+shapes/0/shape = SubResource( 3 )
+shapes/0/transform = Matrix32( 1, 0, 0, 1, 0, 0 )
+shapes/0/trigger = false
+collision/layers = 1
+collision/mask = 1
+collision/margin = 0.08
+script/script = SubResource( 2 )
+
+[node name="Sprite" type="AnimatedSprite" parent="."]
+
+transform/scale = Vector2( 2, 2 )
+frames = SubResource( 4 )
+animation = "Idle"
+
+[node name="RayPiso" type="RayCast2D" parent="."]
+
+transform/pos = Vector2( 0, 24.5466 )
+enabled = true
+cast_to = Vector2( 0, 50 )
+layer_mask = 1
+type_mask = 15
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+
+shape = SubResource( 3 )
+trigger = false
+_update_shape_index = 0
+
+[node name="Damage" type="Area2D" parent="."]
+
+input/pickable = true
+shapes/0/shape = SubResource( 5 )
+shapes/0/transform = Matrix32( 1, 0, 0, 1, 0, 0 )
+shapes/0/trigger = false
+gravity_vec = Vector2( 0, 1 )
+gravity = 98.0
+linear_damp = 0.1
+angular_damp = 1.0
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Damage"]
+
+shape = SubResource( 5 )
+trigger = false
+_update_shape_index = 0
+
+[connection signal="body_enter" from="Damage" to="." method="_on_Damage_body_enter"]
+
+

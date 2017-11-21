@@ -6,6 +6,7 @@ onready var direction = 1
 onready var VELOCIDAD = 0
 onready var SALTO = 0
 onready var VIDA = 0
+onready var SCORE = 0
 
 func _ready():
 	add_to_group("Enemigo")
@@ -24,10 +25,8 @@ func movimientoLateral(delta):
 	move_and_slide(velocity,Vector2(0,-1))
 	pass
 
-func salto(delta):
-	velocity.y += GRAVEDAD * delta
-	if(get_node("RayIzq").is_colliding() || get_node("RayDer").is_colliding()):
-		set_axis_velocity(Vector2(0,-SALTO))
+func salto():
+	velocity.y = - SALTO
 	pass
 
 func setVelocidad(val):
@@ -36,11 +35,21 @@ func setVelocidad(val):
 func setSalto(val):
 	SALTO = val
 
+func getSalto():
+	return SALTO
+
 func setVida(val):
 	VIDA = val
+
+func setScore(val):
+	SCORE = val
+
+func getScore():
+	return SCORE
 
 func getDamage():
 	VIDA -= 1
 	if(VIDA<=0):
+		Global.score += getScore()
 		queue_free()
 	pass
