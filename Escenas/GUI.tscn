@@ -20,27 +20,27 @@ func _ready():
 [sub_resource type="CircleShape2D" id=2]
 
 custom_solver_bias = 0.0
-radius = 60.0
+radius = 70.0
 
 [sub_resource type="CircleShape2D" id=3]
 
 custom_solver_bias = 0.0
-radius = 60.0
+radius = 70.0
 
 [sub_resource type="CircleShape2D" id=4]
 
 custom_solver_bias = 0.0
-radius = 60.0
+radius = 70.0
 
 [sub_resource type="CircleShape2D" id=7]
 
 custom_solver_bias = 0.0
-radius = 60.0
+radius = 100.0
 
 [sub_resource type="CircleShape2D" id=8]
 
 custom_solver_bias = 0.0
-radius = 60.0
+radius = 100.0
 
 [node name="GUI" type="CanvasLayer"]
 
@@ -57,7 +57,7 @@ transform/pos = Vector2( 1020.7, 597.689 )
 [node name="Salto" type="TouchScreenButton" parent="Derecha"]
 
 visibility/opacity = 0.7
-transform/pos = Vector2( -312.865, -30.9285 )
+transform/pos = Vector2( -394.261, -56.5533 )
 transform/rot = 90.0
 transform/scale = Vector2( 1.5, 1.5 )
 normal = ExtResource( 1 )
@@ -73,7 +73,7 @@ visibility_mode = 0
 [node name="Shuriken" type="TouchScreenButton" parent="Derecha"]
 
 visibility/opacity = 0.7
-transform/pos = Vector2( -169.757, -228.697 )
+transform/pos = Vector2( -276.779, -248.293 )
 transform/scale = Vector2( 1.5, 1.5 )
 normal = ExtResource( 2 )
 pressed = ExtResource( 2 )
@@ -88,7 +88,7 @@ visibility_mode = 0
 [node name="Melee" type="TouchScreenButton" parent="Derecha"]
 
 visibility/opacity = 0.7
-transform/pos = Vector2( -32.9708, -119.218 )
+transform/pos = Vector2( -152.051, -153.887 )
 transform/scale = Vector2( 1.5, 1.5 )
 normal = ExtResource( 3 )
 pressed = ExtResource( 3 )
@@ -107,7 +107,7 @@ transform/pos = Vector2( 2.51534, 596.22 )
 [node name="Izq" type="TouchScreenButton" parent="Izquierda"]
 
 visibility/opacity = 0.7
-transform/pos = Vector2( 126, -30 )
+transform/pos = Vector2( 153.701, -49.9446 )
 transform/rot = 180.0
 transform/scale = Vector2( 1.5, 1.5 )
 normal = ExtResource( 1 )
@@ -123,7 +123,7 @@ visibility_mode = 0
 [node name="Der" type="TouchScreenButton" parent="Izquierda"]
 
 visibility/opacity = 0.7
-transform/pos = Vector2( 228, -124 )
+transform/pos = Vector2( 237.972, -146.161 )
 transform/scale = Vector2( 1.5, 1.5 )
 normal = ExtResource( 1 )
 pressed = null
