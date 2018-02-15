@@ -39,6 +39,7 @@ func _ready():
 	get_node(\"RayPiso\").add_exception(self)
 	Global.player = self
 	vida = Global.maxVida
+	get_node(\"Tween\").start()
 	pass
 
 func is_on_floor():

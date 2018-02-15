@@ -8,6 +8,7 @@ onready var score = 0
 
 func _ready():
 	set_process(true)
+	player = null
 	pass
 
 func _process(delta):

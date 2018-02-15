@@ -13,10 +13,12 @@ resource/name = "MainEscena.gd"
 script/source = "extends Control
 
 func _ready():
+	Global.player = null
 	var sizeWindow = OS.get_window_size()
 	get_node(\"C/Center\").edit_set_rect(Rect2(0,0,sizeWindow.x,sizeWindow.y))
 	get_node(\"C\").hide()
-	get_node(\"Tween\").interpolate_property(get_node(\"Sprite\"),\"transform/pos\",Vector2(0,36),Vector2(-get_node(\"Sprite\").get_item_rect().size.width/5.2,32),3,Tween.TRANS_EXPO,Tween.EASE_IN)
+	var sizeSprite = get_node(\"Sprite\").get_item_rect().size
+	get_node(\"Tween\").interpolate_property(get_node(\"Sprite\"),\"transform/pos\",Vector2(0,5),Vector2(-get_node(\"Sprite\").get_item_rect().size.width/4.2,5),3,Tween.TRANS_EXPO,Tween.EASE_IN)
 	get_node(\"Tween\").start()
 	VisualServer.set_default_clear_color(Color(0,0.5,0.5))
 	pass
@@ -120,9 +122,10 @@ script/script = SubResource( 1 )
 
 [node name="Sprite" type="Sprite" parent="."]
 
-transform/scale = Vector2( 0.6, 0.6 )
+transform/pos = Vector2( 0.376719, 4.04982 )
+transform/scale = Vector2( 0.722351, 0.904655 )
 texture = ExtResource( 1 )
-offset = Vector2( 2506.54, 441.771 )
+offset = Vector2( 2502.07, 446.011 )
 
 [node name="C" type="Container" parent="."]
 

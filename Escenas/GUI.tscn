@@ -32,12 +32,12 @@ radius = 70.0
 custom_solver_bias = 0.0
 radius = 70.0
 
-[sub_resource type="CircleShape2D" id=7]
+[sub_resource type="CircleShape2D" id=5]
 
 custom_solver_bias = 0.0
 radius = 100.0
 
-[sub_resource type="CircleShape2D" id=8]
+[sub_resource type="CircleShape2D" id=6]
 
 custom_solver_bias = 0.0
 radius = 100.0
@@ -113,7 +113,7 @@ transform/scale = Vector2( 1.5, 1.5 )
 normal = ExtResource( 1 )
 pressed = ExtResource( 1 )
 bitmask = null
-shape = SubResource( 7 )
+shape = SubResource( 5 )
 shape_centered = true
 shape_visible = true
 passby_press = false
@@ -123,12 +123,12 @@ visibility_mode = 0
 [node name="Der" type="TouchScreenButton" parent="Izquierda"]
 
 visibility/opacity = 0.7
-transform/pos = Vector2( 237.972, -146.161 )
+transform/pos = Vector2( 281.972, -146.161 )
 transform/scale = Vector2( 1.5, 1.5 )
 normal = ExtResource( 1 )
 pressed = null
 bitmask = null
-shape = SubResource( 8 )
+shape = SubResource( 6 )
 shape_centered = true
 shape_visible = true
 passby_press = false

@@ -10,7 +10,8 @@ script/source = "extends Container
 
 func _ready():
 	var sizeWindow = OS.get_window_size()
-	edit_set_rect(Rect2(0,0,sizeWindow.width,sizeWindow.height))
+	get_node(\"CenterContainer\").edit_set_rect(Rect2(0,0,sizeWindow.width,sizeWindow.height))
+	get_node(\"Sprite\").set_global_pos(Vector2(sizeWindow.width,sizeWindow.height)/2)
 	get_node(\"Tween\").interpolate_property(get_node(\"CenterContainer\"), \"rect/pos\", Vector2(0,sizeWindow.height + 50) , Vector2(0, - 500) , 10, Tween.TRANS_LINEAR, Tween.EASE_IN)
 	get_node(\"Tween\").start()
 	VisualServer.set_default_clear_color(Color(0.9,0.80,98))
@@ -81,6 +82,7 @@ use_top_left = false
 
 [node name="VBoxContainer" type="VBoxContainer" parent="CenterContainer"]
 
+editor/display_folded = true
 focus/ignore_mouse = false
 focus/stop_mouse = false
 size_flags/horizontal = 2
